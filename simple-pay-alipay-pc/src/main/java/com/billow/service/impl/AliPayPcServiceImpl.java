@@ -6,6 +6,7 @@ import com.alipay.api.domain.AlipayTradePagePayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.billow.AliPayUtils;
+import com.billow.base.service.impl.AliPayTradeBaseServiceImpl;
 import com.billow.config.AliPayPcConfig;
 import com.billow.model.OrderInfo;
 import com.billow.service.AliPayPcService;
@@ -25,23 +26,26 @@ import java.util.Map;
  * @create 2019-12-22 15:06
  */
 @Slf4j
-public class AliPayPcServiceImpl implements AliPayPcService {
+public class AliPayPcServiceImpl extends AliPayTradeBaseServiceImpl implements AliPayPcService {
 
+    // alipay 配置数据
     private AliPayPcConfig aliPayPcConfig;
+    // alipay 基本参数
+    private AlipayClient alipayClient;
 
     public AliPayPcServiceImpl(@NonNull AliPayPcConfig aliPayPcConfig) {
         this.aliPayPcConfig = aliPayPcConfig;
+        //获得初始化的AlipayClient
+        this.alipayClient = new DefaultAlipayClient(aliPayPcConfig.getGatewayUrl(), aliPayPcConfig.getAppId(),
+                aliPayPcConfig.getPrivateKey(), aliPayPcConfig.getFormat(), aliPayPcConfig.getCharset(),
+                aliPayPcConfig.getAliPayPublicKey(), aliPayPcConfig.getSignType());
+        super.setAlipayClient(this.alipayClient);
     }
 
     @Override
     public void tradePage(HttpServletResponse response, AlipayTradePagePayModel model) throws Exception {
         // 固定的
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(aliPayPcConfig.getGatewayUrl(), aliPayPcConfig.getAppId(),
-                aliPayPcConfig.getPrivateKey(), aliPayPcConfig.getFormat(), aliPayPcConfig.getCharset(),
-                aliPayPcConfig.getAliPayPublicKey(), aliPayPcConfig.getSignType());
-
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         alipayRequest.setReturnUrl(aliPayPcConfig.getReturnUrl());
@@ -58,6 +62,7 @@ public class AliPayPcServiceImpl implements AliPayPcService {
 
     @Override
     public String returnUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) {
+        // TODO 跳转到支付状态页面，使用异步来获取支付结果
         log.debug("同步通知========>>>>>");
         try {
             return this.callBackNotify(request, updateOrderStausService);

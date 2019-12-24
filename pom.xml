@@ -31,9 +31,9 @@
     </properties>
 
     <modules>
+        <module>simple-pay-alipay-base</module>
         <module>simple-pay-alipay-pc</module>
         <module>simple-pay-alipay-pc-test</module>
-        <module>simple-pay-alipay-base</module>
     </modules>
 
     <dependencyManagement>

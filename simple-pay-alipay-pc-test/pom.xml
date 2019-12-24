@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>com.billow</groupId>
-            <artifactId>pay-alipay-pc</artifactId>
+            <artifactId>simple-pay-alipay-pc</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -1,11 +1,12 @@
 package com.billow.service;
 
 import com.alipay.api.domain.AlipayTradePagePayModel;
+import com.billow.base.service.AliPayTradeBaseService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface AliPayPcService {
+public interface AliPayPcService extends AliPayTradeBaseService {
 
     /**
      * 调用支付宝pc 支付接口，返回支付宝支付页面，使用以下直接写入页面<br/>
