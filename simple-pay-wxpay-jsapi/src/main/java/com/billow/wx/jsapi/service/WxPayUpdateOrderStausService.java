@@ -1,8 +1,9 @@
-package com.billow.alipay.wap.service;
+package com.billow.wx.jsapi.service;
 
-import com.billow.alipay.wap.model.OrderInfo;
 
-public interface AliPayUpdateOrderStausService {
+import com.billow.wx.jsapi.model.OrderInfo;
+
+public interface WxPayUpdateOrderStausService {
 
     /**
      * 更新订单状态

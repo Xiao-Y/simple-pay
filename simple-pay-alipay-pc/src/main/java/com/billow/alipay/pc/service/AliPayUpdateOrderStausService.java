@@ -12,7 +12,7 @@ public interface AliPayUpdateOrderStausService {
      * @author billow
      * @date 2019/12/22 18:14
      */
-    boolean updateOrderStaus(OrderInfo orderInfo);
+    boolean updateOrderStatus(OrderInfo orderInfo);
 
     /**
      * 校验订单是否正确

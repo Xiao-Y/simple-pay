@@ -72,7 +72,7 @@ public class AliPayWapServiceImpl extends AliPayTradeBaseServiceImpl implements 
                 // 业务校验
                 updateOrderStausService.checkOrderData(orderInfo);
                 // 更新订单状态
-                updateOrderStausService.updateOrderStaus(orderInfo);
+                updateOrderStausService.updateOrderStatus(orderInfo);
             }
             return "success";
         }

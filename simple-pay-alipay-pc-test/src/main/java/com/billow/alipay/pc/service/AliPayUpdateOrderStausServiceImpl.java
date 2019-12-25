@@ -11,7 +11,7 @@ public class AliPayUpdateOrderStausServiceImpl implements AliPayUpdateOrderStaus
 
 
     @Override
-    public boolean updateOrderStaus(OrderInfo orderInfo) {
+    public boolean updateOrderStatus(OrderInfo orderInfo) {
         log.info(JSONObject.toJSONString(orderInfo));
         return true;
     }
