@@ -34,6 +34,9 @@
         <module>simple-pay-alipay-base</module>
         <module>simple-pay-alipay-pc</module>
         <module>simple-pay-alipay-pc-test</module>
+        <module>simple-pay-alipay-wap</module>
+        <module>simple-pay-wxpay-jsapi</module>
+        <module>simple-pay-wxpay-base</module>
     </modules>
 
     <dependencyManagement>
