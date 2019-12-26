@@ -1,6 +1,6 @@
 package com.billow.wx.base.model;
 
-import com.billow.wx.base.utils.ApiField;
+import com.billow.wx.base.annotation.ApiField;
 import lombok.Data;
 
 /**

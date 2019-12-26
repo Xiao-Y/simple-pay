@@ -1,5 +1,11 @@
-package com.billow.wx.base.utils;
+package com.billow.wx.base.annotation;
 
+/**
+ * 用于 bean 转 map
+ *
+ * @author LiuYongTao
+ * @date 2019/12/26 15:27
+ */
 public @interface ApiField {
 
     // map 的key

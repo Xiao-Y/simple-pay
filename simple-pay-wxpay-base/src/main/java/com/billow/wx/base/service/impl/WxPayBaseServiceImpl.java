@@ -12,6 +12,9 @@ import com.github.wxpay.sdk.WXPayConstants;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,6 +99,40 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
             throw new ReturnCodeException(resp);
         }
         return resp;
+    }
+
+    @Override
+    public Map<String, Object> downloadBill(String billType, @NonNull String billDate) throws Exception {
+        Map<String, String> reqData = new HashMap<>();
+        if (billType != null) {
+            reqData.put("bill_type", billType);
+        }
+        reqData.put("bill_date", billDate);
+        Map<String, String> resp = wxPay.downloadBill(reqData);
+        String returnCode = resp.get("return_code");
+        if (WXPayConstants.FAIL.equals(returnCode)) {
+            throw new ReturnCodeException(resp);
+        }
+        // 返回账单数据
+        String data = resp.get("data");
+        String[] split = data.split("\r\n");
+        // 标题
+        String[] title1 = split[0].substring(1).split(",`");
+        List<String[]> titleData1 = new ArrayList<>();
+        for (int i = 1; i < split.length - 2; i++) {
+            titleData1.add(split[i].substring(1).split(",`"));
+        }
+        // 汇总标题
+        String[] title2 = split[split.length - 2].substring(1).split(",`");
+        // 汇总数据
+        String[] titleData2 = split[split.length - 1].substring(1).split(",`");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("title1", title1);
+        map.put("titleData1", titleData1);
+        map.put("title2", title2);
+        map.put("titleData2", titleData2);
+        return map;
     }
 
     /**

@@ -1,9 +1,9 @@
 package com.billow.wx.jsapi.service.impl;
 
+import com.billow.wx.base.config.WxPayBaseConfig;
 import com.billow.wx.base.enums.NotifyTypeEnum;
 import com.billow.wx.base.model.UnifiedOrderModel;
 import com.billow.wx.base.service.impl.WxPayBaseServiceImpl;
-import com.billow.wx.jsapi.config.WXPayJsApiConfig;
 import com.billow.wx.jsapi.model.OrderInfo;
 import com.billow.wx.jsapi.service.WxPayJsApiService;
 import com.billow.wx.jsapi.service.WxPayUpdateOrderStausService;
@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * jsapi 支付接口
+ *
  * @author liuyongtao
  * @create 2019-12-25 10:55
  */
@@ -29,7 +31,7 @@ public class WxPayJsApiServiceImpl extends WxPayBaseServiceImpl implements WxPay
 
     private WXPay wxpay;
 
-    WxPayJsApiServiceImpl(WXPayJsApiConfig config) {
+    WxPayJsApiServiceImpl(WxPayBaseConfig config) throws Exception {
         this.wxpay = new WXPay(config);
         super.setWxPay(wxpay);
     }

@@ -1,8 +1,8 @@
 package com.billow.wx.base.model;
 
-import com.billow.wx.base.utils.ApiField;
-import com.sun.istack.internal.NotNull;
+import com.billow.wx.base.annotation.ApiField;
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  * 退款模型
@@ -22,17 +22,17 @@ public class RefundModel {
     private String outTradeNo;
 
     // 商户退款单号
-    @NotNull
+    @NonNull
     @ApiField
     private String outRefundNo;
 
     // 订单金额
-    @NotNull
+    @NonNull
     @ApiField
     private String totalFee;
 
     // 退款金额
-    @NotNull
+    @NonNull
     @ApiField
     private String refundFee;
 

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public interface WxPayJsApiService extends WxPayBaseService {
 
     /**
-     * 统一下单接口,返回支付连接，用于生成支付二维码
+     * 统一下单接口,返回支付连接，用于生成支付二维码连接
      *
      * @param model
      * @return java.lang.String
