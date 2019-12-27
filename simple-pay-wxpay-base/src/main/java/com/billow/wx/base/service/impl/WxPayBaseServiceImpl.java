@@ -1,6 +1,5 @@
 package com.billow.wx.base.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.billow.wx.base.exception.ReturnCodeException;
 import com.billow.wx.base.model.QueryModel;
 import com.billow.wx.base.model.RefundModel;
@@ -34,9 +33,9 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
     @Override
     public Map<String, String> unifiedOrder(UnifiedOrderModel model) throws Exception {
         Map<String, String> data = ConvertUtils.entityToMap(model);
-        log.debug("unifiedorder:====>>>> {}", JSONObject.toJSONString(data));
+        log.debug("unifiedorder:====>>>> {}", data);
         Map<String, String> resp = wxPay.unifiedOrder(data);
-        log.debug("unifiedorder:<<<<==== {}", JSONObject.toJSONString(resp));
+        log.debug("unifiedorder:<<<<==== {}", resp);
         // SUCCESS/FAIL
         String returnCode = resp.get("return_code");
         if (WXPayConstants.FAIL.equals(returnCode)) {
@@ -79,7 +78,7 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
     public Map<String, String> refundByTransactionId(RefundModel model) throws Exception {
         @NonNull String transactionId = model.getTransactionId();
         Map<String, String> data = ConvertUtils.entityToMap(model);
-        log.debug("refundByTransactionId:====>>>> {}", JSONObject.toJSONString(data));
+        log.debug("refundByTransactionId:====>>>> {}", data);
         Map<String, String> resp = wxPay.refund(data);
         String returnCode = resp.get("return_code");
         if (WXPayConstants.FAIL.equals(returnCode)) {
@@ -92,7 +91,7 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
     public Map<String, String> refundByOutTradeNo(RefundModel model) throws Exception {
         @NonNull String tradeNo = model.getOutTradeNo();
         Map<String, String> data = ConvertUtils.entityToMap(model);
-        log.debug("refundByOutTradeNo:====>>>> {}", JSONObject.toJSONString(data));
+        log.debug("refundByOutTradeNo:====>>>> {}", data);
         Map<String, String> resp = wxPay.refund(data);
         String returnCode = resp.get("return_code");
         if (WXPayConstants.FAIL.equals(returnCode)) {
@@ -153,7 +152,7 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
         model.setOutRefundNo(outRefundNo);
         model.setRefundId(refundId);
         Map<String, String> data = ConvertUtils.entityToMap(model);
-        log.debug("QueryModel:====>>>> {}", JSONObject.toJSONString(data));
+        log.debug("QueryModel:====>>>> {}", data);
         Map<String, String> resp = wxPay.refundQuery(data);
         String returnCode = resp.get("return_code");
         if (WXPayConstants.FAIL.equals(returnCode)) {
@@ -176,7 +175,7 @@ public class WxPayBaseServiceImpl implements WxPayBaseService {
         model.setTransactionId(transactionId);
         model.setOutTradeNo(outTradeNo);
         Map<String, String> data = ConvertUtils.entityToMap(model);
-        log.debug("QueryModel:====>>>> {}", JSONObject.toJSONString(data));
+        log.debug("QueryModel:====>>>> {}", data);
         Map<String, String> resp = wxPay.orderQuery(data);
         String returnCode = resp.get("return_code");
         if (WXPayConstants.FAIL.equals(returnCode)) {
