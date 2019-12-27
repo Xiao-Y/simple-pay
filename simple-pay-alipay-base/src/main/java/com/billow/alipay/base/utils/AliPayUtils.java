@@ -1,4 +1,4 @@
-package com.billow.alipay.pc.utils;
+package com.billow.alipay.base.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;

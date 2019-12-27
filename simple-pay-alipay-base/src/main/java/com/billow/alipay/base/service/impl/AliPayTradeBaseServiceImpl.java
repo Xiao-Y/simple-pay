@@ -2,17 +2,23 @@ package com.billow.alipay.base.service.impl;
 
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
+import com.alipay.api.domain.AlipayTradeCancelModel;
 import com.alipay.api.domain.AlipayTradeCloseModel;
+import com.alipay.api.domain.AlipayTradeCreateModel;
 import com.alipay.api.domain.AlipayTradeFastpayRefundQueryModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.domain.AlipayTradeRefundModel;
 import com.alipay.api.request.AlipayDataDataserviceBillDownloadurlQueryRequest;
+import com.alipay.api.request.AlipayTradeCancelRequest;
 import com.alipay.api.request.AlipayTradeCloseRequest;
+import com.alipay.api.request.AlipayTradeCreateRequest;
 import com.alipay.api.request.AlipayTradeFastpayRefundQueryRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayDataDataserviceBillDownloadurlQueryResponse;
+import com.alipay.api.response.AlipayTradeCancelResponse;
 import com.alipay.api.response.AlipayTradeCloseResponse;
+import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
@@ -115,5 +121,27 @@ public class AliPayTradeBaseServiceImpl implements AliPayTradeBaseService {
             throw new RuntimeException("查询对账单下载地址,查询失败，请稍后重试！");
         }
         return response;
+    }
+
+    @Override
+    public AlipayTradeCancelResponse tradeCancel(AlipayTradeCancelModel model) throws Exception {
+        AlipayTradeCancelRequest request = new AlipayTradeCancelRequest();
+        request.setBizModel(model);
+        AlipayTradeCancelResponse execute = alipayClient.execute(request);
+        if (!execute.isSuccess()) {
+            throw new RuntimeException("统一收单交易撤销接口,撤销失败，请稍后重试！");
+        }
+        return execute;
+    }
+
+    @Override
+    public AlipayTradeCreateResponse tradeCreate(AlipayTradeCreateModel model) throws Exception {
+        AlipayTradeCreateRequest request = new AlipayTradeCreateRequest();
+        request.setBizModel(model);
+        AlipayTradeCreateResponse execute = alipayClient.execute(request);
+        if (!execute.isSuccess()) {
+            throw new RuntimeException("统一收单交易创建接口,创建失败，请稍后重试！");
+        }
+        return execute;
     }
 }
