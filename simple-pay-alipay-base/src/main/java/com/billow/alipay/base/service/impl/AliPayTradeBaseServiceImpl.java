@@ -1,5 +1,6 @@
 package com.billow.alipay.base.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayTradeCancelModel;
@@ -23,6 +24,8 @@ import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.billow.alipay.base.service.AliPayTradeBaseService;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 交易查询接口
@@ -30,117 +33,132 @@ import com.billow.alipay.base.service.AliPayTradeBaseService;
  * @author liuyongtao
  * @create 2019-12-23 22:01
  */
+@Slf4j
 public class AliPayTradeBaseServiceImpl implements AliPayTradeBaseService {
 
     private AlipayClient alipayClient;
 
     @Override
-    public void setAlipayClient(AlipayClient alipayClient) {
+    public void setAlipayClient(@NonNull AlipayClient alipayClient) {
         this.alipayClient = alipayClient;
     }
 
     @Override
-    public AlipayTradeQueryResponse tradeQuery(AlipayTradeQueryModel queryModel) throws Exception {
-        if (queryModel.getOutTradeNo() == null && queryModel.getTradeNo() == null) {
+    public AlipayTradeQueryResponse tradeQuery(AlipayTradeQueryModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
+        if (model.getOutTradeNo() == null && model.getTradeNo() == null) {
             throw new RuntimeException("outTradeNo,tradeNo 订单支付时传入的商户订单号,和支付宝交易号不能同时为空");
         }
         AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
-        request.setBizModel(queryModel);
-        AlipayTradeQueryResponse response = alipayClient.execute(request);
+        request.setBizModel(model);
+        AlipayTradeQueryResponse execute = alipayClient.execute(request);
         // 如果没有成功，2秒后再查询一次
-        if (!response.isSuccess()) {
+        if (!execute.isSuccess()) {
             Thread.sleep(2000);
-            response = alipayClient.execute(request);
+            execute = alipayClient.execute(request);
         }
-        if (!response.isSuccess()) {
-            throw new RuntimeException("统一收单线下交易查询接口,查询失败，请稍后重试！");
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException(execute.getSubMsg());
         }
-        return response;
+        return execute;
     }
 
     @Override
-    public AlipayTradeFastpayRefundQueryResponse refundQuery(AlipayTradeFastpayRefundQueryModel queryModel) throws Exception {
-        if (queryModel.getOutTradeNo() == null && queryModel.getTradeNo() == null) {
+    public AlipayTradeFastpayRefundQueryResponse refundQuery(AlipayTradeFastpayRefundQueryModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
+        if (model.getOutTradeNo() == null && model.getTradeNo() == null) {
             throw new RuntimeException("outTradeNo,tradeNo 订单支付时传入的商户订单号,和支付宝交易号不能同时为空");
         }
 
-        if (queryModel.getOutRequestNo() == null) {
+        if (model.getOutRequestNo() == null) {
             throw new RuntimeException("outRequestNo 请求退款接口时，传入的退款请求号，如果在退款请求时未传入，则该值为创建交易时的外部交易号");
         }
         AlipayTradeFastpayRefundQueryRequest request = new AlipayTradeFastpayRefundQueryRequest();
-        request.setBizModel(queryModel);
-        AlipayTradeFastpayRefundQueryResponse response = alipayClient.execute(request);
+        request.setBizModel(model);
+        AlipayTradeFastpayRefundQueryResponse execute = alipayClient.execute(request);
         // 如果没有成功，2秒后再查询一次
-        if (!response.isSuccess()) {
+        if (!execute.isSuccess()) {
             Thread.sleep(2000);
-            response = alipayClient.execute(request);
+            execute = alipayClient.execute(request);
         }
-        if (!response.isSuccess()) {
-            throw new RuntimeException("统一收单交易退款查询接口,查询失败，请稍后重试！");
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException(execute.getSubMsg());
         }
-        return response;
+        return execute;
     }
 
     @Override
-    public AlipayTradeRefundResponse tradeRefund(AlipayTradeRefundModel refundModel) throws Exception {
-        if (refundModel.getOutTradeNo() == null && refundModel.getTradeNo() == null) {
+    public AlipayTradeRefundResponse tradeRefund(AlipayTradeRefundModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
+        if (model.getOutTradeNo() == null && model.getTradeNo() == null) {
             throw new RuntimeException("outTradeNo,tradeNo 订单支付时传入的商户订单号,和支付宝交易号不能同时为空");
         }
 
         AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
-        request.setBizModel(refundModel);
-        AlipayTradeRefundResponse response = alipayClient.execute(request);
-        if (!response.isSuccess()) {
-            throw new RuntimeException("统一收单交易退款接口,退款失败，请稍后重试！");
+        request.setBizModel(model);
+        AlipayTradeRefundResponse execute = alipayClient.execute(request);
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException(execute.getSubMsg());
         }
-        return response;
+        return execute;
     }
 
     @Override
-    public AlipayTradeCloseResponse tradeClose(AlipayTradeCloseModel closeModel) throws Exception {
+    public AlipayTradeCloseResponse tradeClose(AlipayTradeCloseModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayTradeCloseRequest request = new AlipayTradeCloseRequest();
-        request.setBizModel(closeModel);
-        AlipayTradeCloseResponse response = alipayClient.execute(request);
-        if (!response.isSuccess()) {
-            throw new RuntimeException("统一收单交易关闭接口,关闭失败，请稍后重试！");
+        request.setBizModel(model);
+        AlipayTradeCloseResponse execute = alipayClient.execute(request);
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException(execute.getSubMsg());
         }
-        return response;
+        return execute;
     }
 
     @Override
-    public AlipayDataDataserviceBillDownloadurlQueryResponse downloadUrlQuery(AlipayDataDataserviceBillDownloadurlQueryModel queryModel) throws Exception {
+    public AlipayDataDataserviceBillDownloadurlQueryResponse downloadUrlQuery(AlipayDataDataserviceBillDownloadurlQueryModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayDataDataserviceBillDownloadurlQueryRequest request = new AlipayDataDataserviceBillDownloadurlQueryRequest();
-        request.setBizModel(queryModel);
-        AlipayDataDataserviceBillDownloadurlQueryResponse response = alipayClient.execute(request);
+        request.setBizModel(model);
+        AlipayDataDataserviceBillDownloadurlQueryResponse execute = alipayClient.execute(request);
         // 如果没有成功，2秒后再查询一次
-        if (!response.isSuccess()) {
+        if (!execute.isSuccess()) {
             Thread.sleep(2000);
-            response = alipayClient.execute(request);
+            execute = alipayClient.execute(request);
         }
-        if (!response.isSuccess()) {
-            throw new RuntimeException("查询对账单下载地址,查询失败，请稍后重试！");
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException(execute.getSubMsg());
         }
-        return response;
+        return execute;
     }
 
     @Override
     public AlipayTradeCancelResponse tradeCancel(AlipayTradeCancelModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayTradeCancelRequest request = new AlipayTradeCancelRequest();
         request.setBizModel(model);
         AlipayTradeCancelResponse execute = alipayClient.execute(request);
+        log.debug("请求出参参：{}", JSONObject.toJSONString(execute));
         if (!execute.isSuccess()) {
-            throw new RuntimeException("统一收单交易撤销接口,撤销失败，请稍后重试！");
+            throw new RuntimeException(execute.getSubMsg());
         }
         return execute;
     }
 
     @Override
     public AlipayTradeCreateResponse tradeCreate(AlipayTradeCreateModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayTradeCreateRequest request = new AlipayTradeCreateRequest();
         request.setBizModel(model);
         AlipayTradeCreateResponse execute = alipayClient.execute(request);
+        log.debug("请求出参参：{}", JSONObject.toJSONString(execute));
         if (!execute.isSuccess()) {
-            throw new RuntimeException("统一收单交易创建接口,创建失败，请稍后重试！");
+            throw new RuntimeException(execute.getSubMsg());
         }
         return execute;
     }

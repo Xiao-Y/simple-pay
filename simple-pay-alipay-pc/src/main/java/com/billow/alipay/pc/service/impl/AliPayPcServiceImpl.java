@@ -1,5 +1,6 @@
 package com.billow.alipay.pc.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePagePayModel;
@@ -46,6 +47,7 @@ public class AliPayPcServiceImpl extends AliPayTradeBaseServiceImpl implements A
     public void tradePage(HttpServletResponse response, AlipayTradePagePayModel model) throws Exception {
         // 固定的
         model.setProductCode("FAST_INSTANT_TRADE_PAY");
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
         alipayRequest.setReturnUrl(aliPayPcConfig.getReturnUrl());
@@ -87,10 +89,7 @@ public class AliPayPcServiceImpl extends AliPayTradeBaseServiceImpl implements A
 
     private String callBackNotify(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) throws Exception {
         Map<String, String> map = AliPayUtils.toMap(request);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            log.debug("异步回调返回：" + entry.getKey() + " = " + entry.getValue());
-        }
-
+        log.debug("请求入参：{}", JSONObject.toJSONString(map));
         // 验签名
         boolean verifyResult = AlipaySignature.rsaCheckV1(map, aliPayPcConfig.getAliPayPublicKey(),
                 aliPayPcConfig.getCharset(), aliPayPcConfig.getSignType());

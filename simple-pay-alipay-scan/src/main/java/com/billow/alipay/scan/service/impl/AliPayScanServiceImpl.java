@@ -1,5 +1,6 @@
 package com.billow.alipay.scan.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradePrecreateModel;
@@ -12,6 +13,7 @@ import com.billow.alipay.scan.config.AliPayScanConfig;
 import com.billow.alipay.scan.model.OrderInfo;
 import com.billow.alipay.scan.service.AliPayScanService;
 import com.billow.alipay.scan.service.AliPayUpdateOrderStausService;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +32,7 @@ public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements
 
     private AlipayClient alipayClient;
 
-    public AliPayScanServiceImpl(AliPayScanConfig aliPayScanConfig) {
+    public AliPayScanServiceImpl(@NonNull AliPayScanConfig aliPayScanConfig) {
         this.aliPayScanConfig = aliPayScanConfig;
         this.alipayClient = new DefaultAlipayClient(aliPayScanConfig.getGatewayUrl(), aliPayScanConfig.getAppId(),
                 aliPayScanConfig.getPrivateKey(), aliPayScanConfig.getFormat(), aliPayScanConfig.getCharset(),
@@ -40,13 +42,17 @@ public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements
 
     @Override
     public String tradePrecreate(AlipayTradePrecreateModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayTradePrecreateRequest request = new AlipayTradePrecreateRequest();
         request.setBizModel(model);
+        request.setNotifyUrl(aliPayScanConfig.getNotifyUrl());
         AlipayTradePrecreateResponse execute = alipayClient.execute(request);
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
         if (!execute.isSuccess()) {
+            log.error(execute.getSubMsg());
             throw new RuntimeException("统一收单线下交易预创建,预创建失败，请稍后重试！");
         }
-        return execute.getBody();
+        return execute.getQrCode();
     }
 
     @Override
@@ -63,9 +69,7 @@ public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements
 
     private String callBackNotify(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) throws Exception {
         Map<String, String> map = AliPayUtils.toMap(request);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            log.debug("异步回调返回：" + entry.getKey() + " = " + entry.getValue());
-        }
+        log.debug("请求入参：{}", JSONObject.toJSONString(map));
         // 验签名
         boolean verifyResult = AlipaySignature.rsaCheckV1(map, aliPayScanConfig.getAliPayPublicKey(),
                 aliPayScanConfig.getCharset(), aliPayScanConfig.getSignType());

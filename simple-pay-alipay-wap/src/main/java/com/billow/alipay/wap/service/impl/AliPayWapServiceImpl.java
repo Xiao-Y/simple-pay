@@ -1,5 +1,6 @@
 package com.billow.alipay.wap.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
@@ -12,6 +13,7 @@ import com.billow.alipay.wap.model.OrderInfo;
 import com.billow.alipay.wap.service.AliPayUpdateOrderStausService;
 import com.billow.alipay.wap.service.AliPayWapService;
 import com.billow.alipay.wap.utils.AliPayUtils;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ public class AliPayWapServiceImpl extends AliPayTradeBaseServiceImpl implements 
 
     private AlipayClient alipayClient;
 
-    public AliPayWapServiceImpl(AliPayWapConfig aliPayWapConfig) {
+    public AliPayWapServiceImpl(@NonNull AliPayWapConfig aliPayWapConfig) {
         this.aliPayWapConfig = aliPayWapConfig;
         this.alipayClient = new DefaultAlipayClient(aliPayWapConfig.getGatewayUrl(), aliPayWapConfig.getAppId(),
                 aliPayWapConfig.getPrivateKey(), aliPayWapConfig.getFormat(), aliPayWapConfig.getCharset(),
@@ -39,9 +41,15 @@ public class AliPayWapServiceImpl extends AliPayTradeBaseServiceImpl implements 
 
     @Override
     public AlipayTradeWapPayResponse wapPay(AlipayTradeWapPayModel model) throws Exception {
+        log.debug("请求入参：{}", JSONObject.toJSONString(model));
         AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
         request.setBizModel(model);
-        return alipayClient.execute(request);
+        AlipayTradeWapPayResponse execute = alipayClient.execute(request);
+        log.debug("请求出参：{}", JSONObject.toJSONString(execute));
+        if (!execute.isSuccess()) {
+            throw new RuntimeException("手机网站支付接口2.0,支付失败，请稍后重试！");
+        }
+        return execute;
     }
 
     @Override
@@ -58,9 +66,7 @@ public class AliPayWapServiceImpl extends AliPayTradeBaseServiceImpl implements 
 
     private String callBackNotify(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) throws Exception {
         Map<String, String> map = AliPayUtils.toMap(request);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            log.debug("异步回调返回：" + entry.getKey() + " = " + entry.getValue());
-        }
+        log.debug("请求入参：{}", JSONObject.toJSONString(map));
         // 验签名
         boolean verifyResult = AlipaySignature.rsaCheckV1(map, aliPayWapConfig.getAliPayPublicKey(),
                 aliPayWapConfig.getCharset(), aliPayWapConfig.getSignType());
