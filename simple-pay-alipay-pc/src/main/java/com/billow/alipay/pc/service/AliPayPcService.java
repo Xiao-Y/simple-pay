@@ -1,12 +1,13 @@
 package com.billow.alipay.pc.service;
 
 import com.alipay.api.domain.AlipayTradePagePayModel;
-import com.billow.alipay.base.service.AliPayTradeBaseService;
+import com.billow.alipay.base.service.AliPayBaseService;
+import com.billow.alipay.pc.model.OrderInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface AliPayPcService extends AliPayTradeBaseService {
+public interface AliPayPcService extends AliPayBaseService {
 
     /**
      * 调用支付宝pc 支付接口，返回支付宝支付页面，使用以下直接写入页面<br/>
@@ -34,20 +35,21 @@ public interface AliPayPcService extends AliPayTradeBaseService {
      *
      * @param updateOrderStausService
      * @param request
-     * @return java.lang.String
+     * @return com.billow.alipay.pc.model.OrderInfo
      * @author billow
      * @date 2019/12/22 16:55
      */
-    String returnUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
+
+    OrderInfo returnUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
 
     /**
-     * 异常支付通知
+     * 异步支付通知
      *
      * @param updateOrderStausService
      * @param request
-     * @return java.lang.String
+     * @return com.billow.alipay.pc.model.OrderInfo
      * @author billow
      * @date 2019/12/22 17:14
      */
-    String notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
+    OrderInfo notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
 }

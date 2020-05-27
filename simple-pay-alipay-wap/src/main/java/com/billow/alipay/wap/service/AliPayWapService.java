@@ -2,11 +2,11 @@ package com.billow.alipay.wap.service;
 
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
-import com.billow.alipay.base.service.AliPayTradeBaseService;
+import com.billow.alipay.base.service.AliPayBaseService;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface AliPayWapService extends AliPayTradeBaseService {
+public interface AliPayWapService extends AliPayBaseService {
 
     /**
      * 手机网站支付接口2.0 https://docs.open.alipay.com/api_1/alipay.trade.wap.pay

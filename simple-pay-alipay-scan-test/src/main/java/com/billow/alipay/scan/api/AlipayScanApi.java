@@ -2,7 +2,6 @@ package com.billow.alipay.scan.api;
 
 import com.alipay.api.domain.AlipayDataDataserviceBillDownloadurlQueryModel;
 import com.alipay.api.domain.AlipayTradeCancelModel;
-import com.alipay.api.domain.AlipayTradeCloseModel;
 import com.alipay.api.domain.AlipayTradeFastpayRefundQueryModel;
 import com.alipay.api.domain.AlipayTradePrecreateModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
@@ -12,8 +11,9 @@ import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.billow.alipay.scan.model.OrderInfo;
 import com.billow.alipay.scan.service.AliPayScanService;
-import com.billow.alipay.scan.service.AliPayUpdateOrderStausService;
+import com.billow.alipay.scan.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ public class AlipayScanApi {
     @Autowired
     private AliPayScanService aliPayScanService;
     @Autowired
-    private AliPayUpdateOrderStausService aliPayUpdateOrderStausService;
+    private OrderService orderService;
 
     @GetMapping(value = "/pay")
     public void pay() throws Exception {
@@ -49,7 +49,16 @@ public class AlipayScanApi {
     @PostMapping(value = "/notify")
     public String notify(HttpServletRequest request) throws Exception {
         log.info("notify----start");
-        return aliPayScanService.notifyUrl(request, aliPayUpdateOrderStausService);
+        String payStatus = AliPayScanService.STATUS_SUCCESS;
+        try {
+            OrderInfo orderInfo = orderService.updateOrder(request);
+            if (!orderInfo.isPaySataus()) {
+                payStatus = AliPayScanService.STATUS_FAIL;
+            }
+        } catch (Exception e) {
+            payStatus = AliPayScanService.STATUS_FAIL;
+        }
+        return payStatus;
     }
 
     // 交易查询

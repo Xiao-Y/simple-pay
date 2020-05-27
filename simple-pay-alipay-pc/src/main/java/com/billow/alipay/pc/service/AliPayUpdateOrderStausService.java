@@ -5,7 +5,7 @@ import com.billow.alipay.pc.model.OrderInfo;
 public interface AliPayUpdateOrderStausService {
 
     /**
-     * 更新订单状态
+     * 更新订单状态（只有checkOrderData为true时才更新）
      *
      * @param orderInfo 订单信息
      * @return boolean 是否更新成功
@@ -15,7 +15,7 @@ public interface AliPayUpdateOrderStausService {
     boolean updateOrderStatus(OrderInfo orderInfo);
 
     /**
-     * 校验订单是否正确
+     * 校验订单是否需要更新，如果想要页面显示支付失败，请抛出异常，
      *
      * @param orderInfo 订单信息
      * @return boolean

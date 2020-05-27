@@ -23,7 +23,7 @@ import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
-import com.billow.alipay.base.service.AliPayTradeBaseService;
+import com.billow.alipay.base.service.AliPayBaseService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * @create 2019-12-23 22:01
  */
 @Slf4j
-public class AliPayTradeBaseServiceImpl implements AliPayTradeBaseService {
+public class AliPayBaseServiceImpl implements AliPayBaseService {
 
     private AlipayClient alipayClient;
 

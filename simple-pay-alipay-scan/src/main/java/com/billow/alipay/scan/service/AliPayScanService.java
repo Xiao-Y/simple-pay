@@ -1,11 +1,12 @@
 package com.billow.alipay.scan.service;
 
 import com.alipay.api.domain.AlipayTradePrecreateModel;
-import com.billow.alipay.base.service.AliPayTradeBaseService;
+import com.billow.alipay.base.service.AliPayBaseService;
+import com.billow.alipay.scan.model.OrderInfo;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface AliPayScanService extends AliPayTradeBaseService {
+public interface AliPayScanService extends AliPayBaseService {
 
 
     /**
@@ -27,9 +28,9 @@ public interface AliPayScanService extends AliPayTradeBaseService {
      *
      * @param updateOrderStausService
      * @param request
-     * @return java.lang.String
+     * @return com.billow.alipay.scan.model.OrderInfo
      * @author billow
      * @date 2019/12/22 17:14
      */
-    String notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
+    OrderInfo notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService);
 }

@@ -7,7 +7,7 @@ import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
-import com.billow.alipay.base.service.impl.AliPayTradeBaseServiceImpl;
+import com.billow.alipay.base.service.impl.AliPayBaseServiceImpl;
 import com.billow.alipay.wap.config.AliPayWapConfig;
 import com.billow.alipay.wap.model.OrderInfo;
 import com.billow.alipay.wap.service.AliPayUpdateOrderStausService;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @create 2019-12-24 11:30
  */
 @Slf4j
-public class AliPayWapServiceImpl extends AliPayTradeBaseServiceImpl implements AliPayWapService {
+public class AliPayWapServiceImpl extends AliPayBaseServiceImpl implements AliPayWapService {
 
     private AliPayWapConfig aliPayWapConfig;
 

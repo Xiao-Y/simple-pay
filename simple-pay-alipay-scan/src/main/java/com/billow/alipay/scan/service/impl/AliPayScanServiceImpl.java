@@ -7,7 +7,7 @@ import com.alipay.api.domain.AlipayTradePrecreateModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePrecreateRequest;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
-import com.billow.alipay.base.service.impl.AliPayTradeBaseServiceImpl;
+import com.billow.alipay.base.service.impl.AliPayBaseServiceImpl;
 import com.billow.alipay.base.utils.AliPayUtils;
 import com.billow.alipay.scan.config.AliPayScanConfig;
 import com.billow.alipay.scan.model.OrderInfo;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @create 2019-12-27 9:55
  */
 @Slf4j
-public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements AliPayScanService {
+public class AliPayScanServiceImpl extends AliPayBaseServiceImpl implements AliPayScanService {
 
     private AliPayScanConfig aliPayScanConfig;
 
@@ -56,7 +56,7 @@ public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements
     }
 
     @Override
-    public String notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) {
+    public OrderInfo notifyUrl(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) {
         log.debug("异常通知========>>>>>");
         try {
             return this.callBackNotify(request, updateOrderStausService);
@@ -64,28 +64,48 @@ public class AliPayScanServiceImpl extends AliPayTradeBaseServiceImpl implements
             log.error(e.getLocalizedMessage());
         }
         log.debug("notify_url 验证失败");
-        return "failure";
+        return new OrderInfo();
     }
 
-    private String callBackNotify(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) throws Exception {
+    /**
+     * 回调通知，更新校验订单、更新订单状态
+     *
+     * @param request
+     * @param updateOrderStausService
+     * @return java.lang.String
+     * @author LiuYongTao
+     * @date 2020/5/26 18:06
+     */
+    private OrderInfo callBackNotify(HttpServletRequest request, AliPayUpdateOrderStausService updateOrderStausService) throws Exception {
+        OrderInfo orderInfo = new OrderInfo();
+        // 通知返回参数转map
         Map<String, String> map = AliPayUtils.toMap(request);
         log.debug("请求入参：{}", JSONObject.toJSONString(map));
+        // 填充通知返回参数
+        orderInfo.setAppId(map.get("app_id"));
+        orderInfo.setOutTradeNo(map.get("out_trade_no"));
+        orderInfo.setTotalAmount(map.get("total_amount"));
+        orderInfo.setTradeNo(map.get("trade_no"));
         // 验签名
         boolean verifyResult = AlipaySignature.rsaCheckV1(map, aliPayScanConfig.getAliPayPublicKey(),
                 aliPayScanConfig.getCharset(), aliPayScanConfig.getSignType());
         log.debug("验证:{}", verifyResult);
         if (verifyResult) {
-            // 业务处理
+            orderInfo.setPaySataus(true);
             if (updateOrderStausService != null) {
-                OrderInfo orderInfo = new OrderInfo(map.get("app_id"), map.get("out_trade_no"),
-                        map.get("total_amount"), map.get("trade_no"));
-                // 业务校验
-                updateOrderStausService.checkOrderData(orderInfo);
-                // 更新订单状态
-                updateOrderStausService.updateOrderStatus(orderInfo);
+                try {
+                    // 业务校验
+                    boolean flag = updateOrderStausService.checkOrderData(orderInfo);
+                    // 更新订单状态
+                    if (flag) {
+                        updateOrderStausService.updateOrderStatus(orderInfo);
+                    }
+                } catch (Exception e) {
+                    log.error("订单更新异常，订单号：{}", orderInfo.getOutTradeNo(), e);
+                    orderInfo.setPaySataus(false);
+                }
             }
-            return "success";
         }
-        return "failure";
+        return orderInfo;
     }
 }

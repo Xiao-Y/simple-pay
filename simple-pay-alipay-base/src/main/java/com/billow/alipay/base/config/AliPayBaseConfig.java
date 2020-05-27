@@ -1,6 +1,8 @@
 package com.billow.alipay.base.config;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 /**
  * 公用配置文件
@@ -9,13 +11,18 @@ import lombok.Data;
  * @create 2019-12-23 22:07
  */
 @Data
+@NoArgsConstructor
 public class AliPayBaseConfig {
+    @NonNull
     private String appId;
     // 商户私钥
+    @NonNull
     private String privateKey;
     // 支付宝公钥
+    @NonNull
     private String aliPayPublicKey;
     // 支付宝的网关
+    @NonNull
     private String gatewayUrl;
     // 编码格式,默认：UTF-8
     private String charset = "UTF-8";

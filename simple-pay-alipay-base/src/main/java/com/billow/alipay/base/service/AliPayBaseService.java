@@ -22,7 +22,11 @@ import com.alipay.api.response.AlipayTradeRefundResponse;
  * @author liuyongtao
  * @create 2019-12-23 22:01
  */
-public interface AliPayTradeBaseService {
+public interface AliPayBaseService {
+
+    String STATUS_FAIL = "failure";
+
+    String STATUS_SUCCESS = "success";
 
     /**
      * 设置 alipay 基类参数
