@@ -35,11 +35,16 @@
         <module>simple-pay-alipay-base</module>
         <module>simple-pay-alipay-pc</module>
         <module>simple-pay-alipay-wap</module>
+
         <module>simple-pay-alipay-scan</module>
-        <module>simple-pay-alipay-pc-test</module>
+        <module>simple-pay-alipay-scan-starter</module>
+
         <module>simple-pay-wxpay-base</module>
         <module>simple-pay-wxpay-jsapi</module>
+
+        <module>simple-pay-alipay-pc-test</module>
         <module>simple-pay-alipay-scan-test</module>
+        <module>simple-pay-alipay-scan-starter-test</module>
     </modules>
 
     <dependencyManagement>
@@ -76,13 +81,38 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!-- 非springboot启动工程使用 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <!--配置生成源码包-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--fork :  如果没有该项配置，肯呢个devtools不会起作用，即应用不会restart -->
+                    <fork>true</fork>
                 </configuration>
             </plugin>
         </plugins>

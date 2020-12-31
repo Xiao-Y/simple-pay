@@ -1,7 +1,8 @@
-package com.billow.alipay.scan.service;
+package com.billow.alipay.scan.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.billow.alipay.scan.model.OrderInfo;
+import com.billow.alipay.scan.starter.model.OrderInfo;
+import com.billow.alipay.scan.starter.service.AliPayUpdateOrderStausService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

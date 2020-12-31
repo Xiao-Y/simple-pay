@@ -55,14 +55,14 @@ public class BeanConfig {
 
     @Bean
     public AliPayScanService aliPayScanService(AliPayScanProperties aliPayScanProperties) {
-        AliPayScanConfig aliPayScanConfig = new AliPayScanConfig();
+        AliPayScanConfig aliPayScanProperties = new AliPayScanConfig();
 
-        aliPayScanConfig.setAppId(aliPayScanProperties.getAppId());
-        aliPayScanConfig.setAliPayPublicKey(aliPayScanProperties.getAliPayPublicKey());
-        aliPayScanConfig.setPrivateKey(aliPayScanProperties.getPrivateKey());
-        aliPayScanConfig.setGatewayUrl(aliPayScanProperties.getGatewayUrl());
-        aliPayScanConfig.setNotifyUrl(aliPayScanProperties.getNotifyUrl());
-        return new AliPayScanServiceImpl(aliPayScanConfig);
+        aliPayScanProperties.setAppId(aliPayScanProperties.getAppId());
+        aliPayScanProperties.setAliPayPublicKey(aliPayScanProperties.getAliPayPublicKey());
+        aliPayScanProperties.setPrivateKey(aliPayScanProperties.getPrivateKey());
+        aliPayScanProperties.setGatewayUrl(aliPayScanProperties.getGatewayUrl());
+        aliPayScanProperties.setNotifyUrl(aliPayScanProperties.getNotifyUrl());
+        return new AliPayScanServiceImpl(aliPayScanProperties);
     }
 }
 ```

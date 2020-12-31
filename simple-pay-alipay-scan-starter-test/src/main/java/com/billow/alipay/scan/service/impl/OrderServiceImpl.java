@@ -1,9 +1,9 @@
 package com.billow.alipay.scan.service.impl;
 
-import com.billow.alipay.scan.model.OrderInfo;
-import com.billow.alipay.scan.service.AliPayScanService;
-import com.billow.alipay.scan.service.AliPayUpdateOrderStausService;
 import com.billow.alipay.scan.service.OrderService;
+import com.billow.alipay.scan.starter.model.OrderInfo;
+import com.billow.alipay.scan.starter.service.AliPayScanService;
+import com.billow.alipay.scan.starter.service.AliPayUpdateOrderStausService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
